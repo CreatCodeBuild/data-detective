@@ -1,23 +1,37 @@
 import pandas
-from bokeh.plotting import figure, output_file, show
+from bokeh.charts import Bar, output_file, show
+
+
+def count_attribute(df, attribute):
+	return df.get(attribute).value_counts().sort_index()
 
 
 ign = pandas.read_csv('ign.csv')
-
-release_year = ign.get('release_year')
-counts = release_year.value_counts()
-counts.sort_index(inplace=True)
-
+score_phrase = count_attribute(ign, 'score_phrase')
+platform = count_attribute(ign, 'platform')
+# score = count_attribute(ign, 'score')
+# genre = count_attribute(ign, 'genre')
+# editors_choice = count_attribute(ign, 'genre')
+# release_year = count_attribute(ign, 'release_year')
+# release_month = count_attribute(ign, 'release_month')
+# release_day = count_attribute(ign, 'release_day')
 
 ### Bokeh
+# prepare some date
+
 # output to static HTML file
 output_file("ign.html")
 
-# create a new plot with a title and axis labels
-p = figure(title="Release Year", x_axis_label='Year', y_axis_label='Quantity')
+data = {
+    'sample': ['1st', '2nd', '1st', '2nd', '1st', '2nd'],
+    'interpreter': ['python', 'python', 'pypy', 'pypy', 'jython', 'jython'],
+    'timing': [-2, 5, 12, 40, 22, 30]
+}
 
-# add a line renderer with legend and line thickness
-p.line(counts.keys(), counts.get_values(), legend="Temp.", line_width=2)
+# create a new plot and add a renderer
+left = Bar(data,legend='top_right', plot_width=400)
+
+# create another new plot and add a renderer
 
 # show the results
-show(p)
+show(left)
