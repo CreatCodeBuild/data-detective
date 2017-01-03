@@ -1,5 +1,5 @@
 import pandas
-from bokeh.charts import Bar, output_file, show
+from bokeh.plotting import figure, output_file, show
 
 
 def count_attribute(df, attribute):
@@ -8,7 +8,7 @@ def count_attribute(df, attribute):
 
 ign = pandas.read_csv('ign.csv')
 score_phrase = count_attribute(ign, 'score_phrase')
-platform = count_attribute(ign, 'platform')
+# platform = count_attribute(ign, 'platform')
 # score = count_attribute(ign, 'score')
 # genre = count_attribute(ign, 'genre')
 # editors_choice = count_attribute(ign, 'genre')
@@ -22,16 +22,7 @@ platform = count_attribute(ign, 'platform')
 # output to static HTML file
 output_file("ign.html")
 
-data = {
-    'sample': ['1st', '2nd', '1st', '2nd', '1st', '2nd'],
-    'interpreter': ['python', 'python', 'pypy', 'pypy', 'jython', 'jython'],
-    'timing': [-2, 5, 12, 40, 22, 30]
-}
+plot = figure(width=600, height=600, x_range=list(score_phrase.keys().values))
+plot.vbar(x=list(score_phrase.keys().values), width=0.5, bottom=0, top=score_phrase.get_values(), color="#CAB2D6")
 
-# create a new plot and add a renderer
-left = Bar(data,legend='top_right', plot_width=400)
-
-# create another new plot and add a renderer
-
-# show the results
-show(left)
+show(plot)
