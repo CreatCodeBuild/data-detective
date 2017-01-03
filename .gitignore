@@ -1,3 +1,7 @@
+# added by CreatCodeBuild
+.idea*
+*.pyc
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
