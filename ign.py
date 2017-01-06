@@ -92,6 +92,20 @@ def games_2010_2016():
 	plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
 	plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
 
+	# 10 Genres with Best Games
+	# 10 Genres with Worst Games
+	average_score_of_genre = games.groupby('genre')['score'].mean().sort_values()
+	plot_average_score_of_genre = figure(x_range=list(average_score_of_genre.nlargest(10).keys().values))
+	plot_average_score_of_genre.vbar(x=list(average_score_of_genre.nlargest(10).keys().values), width=0.5, bottom=0,
+									 top=average_score_of_genre.nlargest(10).get_values())
+
+	plot_worst_genre = figure(x_range=list(average_score_of_genre.nsmallest(10).keys().values))
+	plot_worst_genre.vbar(x=list(average_score_of_genre.nsmallest(10).keys().values), width=0.5, bottom=0,
+									 top=average_score_of_genre.nsmallest(10).get_values())
+
+	median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
+	plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
+	plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
 
 
 
@@ -99,7 +113,9 @@ def games_2010_2016():
 	grid = gridplot([
 		[plot_platform, plot_genre, plot_editors_choice],
 		[plot_average_score_of_platform],
-		[plot_median_score_of_platform]
+		[plot_median_score_of_platform],
+		[plot_average_score_of_genre, plot_worst_genre],
+		[plot_median_score_of_genre]
 	])
 	show(grid)
 
@@ -123,8 +139,7 @@ Top 10 Games by Score
 
 Percentage of good+ games of platforms
 Percentage of bad+ games of platforms
-Genres with Best Games
-Genres with Worst Games
+
 
 Summary
 '''
