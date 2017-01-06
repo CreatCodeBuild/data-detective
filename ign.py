@@ -4,7 +4,8 @@ from bokeh.io import output_file, show
 from bokeh.layouts import gridplot
 from bokeh.charts import Donut
 from bokeh.models import HoverTool
-from bokeh.embed import components
+from bokeh.resources import CDN
+from bokeh.embed import file_html
 
 
 def count_attribute(df, attribute):
@@ -118,9 +119,6 @@ def games_2010_2016():
 	# plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
 	# plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
 
-
-
-	output_file("ign.html")
 	grid = gridplot([
 		[plot_platform, plot_genre, plot_editors_choice]
 		# [plot_average_score_of_platform],
@@ -128,7 +126,13 @@ def games_2010_2016():
 		# [plot_average_score_of_genre, plot_worst_genre],
 		# [plot_median_score_of_genre]
 	])
+
 	show(grid)
+
+	html = file_html(grid, CDN, "Out")
+	with open('out.html', mode='w') as f:
+		f.write(html)
+
 
 
 	# Worst Platform by average scores of games
