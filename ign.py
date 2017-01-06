@@ -83,11 +83,29 @@ def games_2010_2016():
 	editors_choice = count_attribute(games, 'editors_choice')
 	plot_editors_choice = Donut(editors_choice, plot_height=600, plot_width=600)
 
+	# Best Platform by average scores of games
+	average_score_of_platform = games.groupby('platform')['score'].mean().sort_values()
+	plot_average_score_of_platform = figure(width=1600, x_range=list(average_score_of_platform.keys().values))
+	plot_average_score_of_platform.vbar(x=list(average_score_of_platform.keys().values), width=0.5, bottom=0, top=average_score_of_platform.get_values())
+
+	median_score_of_platform = games.groupby('platform')['score'].median().sort_values()
+	plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
+	plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
+
+
+
+
 	output_file("ign.html")
 	grid = gridplot([
-		[plot_platform, plot_genre, plot_editors_choice]
+		[plot_platform, plot_genre, plot_editors_choice],
+		[plot_average_score_of_platform],
+		[plot_median_score_of_platform]
 	])
 	show(grid)
+
+
+	# Worst Platform by average scores of games
+
 
 '''
 Top 100 Games by Score
@@ -103,8 +121,6 @@ Top 20 Games by Score
 
 Top 10 Games by Score
 
-Best Platform by average scores of games
-Worst Platform by average scores of games
 Percentage of good+ games of platforms
 Percentage of bad+ games of platforms
 Genres with Best Games
