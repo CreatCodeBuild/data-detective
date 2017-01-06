@@ -3,6 +3,7 @@ from bokeh.plotting import figure
 from bokeh.io import output_file, show
 from bokeh.layouts import gridplot
 from bokeh.charts import Donut
+from bokeh.models import HoverTool
 from bokeh.embed import components
 
 
@@ -72,50 +73,60 @@ def games_2010_2016():
 	games = ign[(ign['release_year'] >= 2010) & (ign['release_year'] <= 2016)]
 	print(games.shape[0], 'games from 2010 to 2016')
 
+	hover = HoverTool(
+		tooltips=[
+			("index", "$index"),
+			("(x,y)", "($x, $y)"),
+		]
+	)
+
 	# Platform
 	platform = count_attribute(games, 'platform')
-	plot_platform = Donut(top_10_and_other(platform), plot_height=600, plot_width=600)
+	top10 = top_10_and_other(platform)
+	print(top10)
+	plot_platform = Donut(top10, title='Platform', plot_height=600, plot_width=600,
+						  tools=[hover])
 
 	# Genre
 	genre = count_attribute(games, 'genre')
-	plot_genre = Donut(top_10_and_other(genre), plot_height=600, plot_width=600)
+	plot_genre = Donut(top_10_and_other(genre), title='Genre', plot_height=600, plot_width=600)
 
 	editors_choice = count_attribute(games, 'editors_choice')
-	plot_editors_choice = Donut(editors_choice, plot_height=600, plot_width=600)
+	plot_editors_choice = Donut(editors_choice, title='Editors Choice', plot_height=600, plot_width=600)
 
-	# Best Platform by average scores of games
-	average_score_of_platform = games.groupby('platform')['score'].mean().sort_values()
-	plot_average_score_of_platform = figure(width=1600, x_range=list(average_score_of_platform.keys().values))
-	plot_average_score_of_platform.vbar(x=list(average_score_of_platform.keys().values), width=0.5, bottom=0, top=average_score_of_platform.get_values())
-
-	median_score_of_platform = games.groupby('platform')['score'].median().sort_values()
-	plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
-	plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
-
-	# 10 Genres with Best Games
-	# 10 Genres with Worst Games
-	average_score_of_genre = games.groupby('genre')['score'].mean().sort_values()
-	plot_average_score_of_genre = figure(x_range=list(average_score_of_genre.nlargest(10).keys().values))
-	plot_average_score_of_genre.vbar(x=list(average_score_of_genre.nlargest(10).keys().values), width=0.5, bottom=0,
-									 top=average_score_of_genre.nlargest(10).get_values())
-
-	plot_worst_genre = figure(x_range=list(average_score_of_genre.nsmallest(10).keys().values))
-	plot_worst_genre.vbar(x=list(average_score_of_genre.nsmallest(10).keys().values), width=0.5, bottom=0,
-									 top=average_score_of_genre.nsmallest(10).get_values())
-
-	median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
-	plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
-	plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
+	# # Best Platform by average scores of games
+	# average_score_of_platform = games.groupby('platform')['score'].mean().sort_values()
+	# plot_average_score_of_platform = figure(width=1600, x_range=list(average_score_of_platform.keys().values))
+	# plot_average_score_of_platform.vbar(x=list(average_score_of_platform.keys().values), width=0.5, bottom=0, top=average_score_of_platform.get_values())
+	#
+	# median_score_of_platform = games.groupby('platform')['score'].median().sort_values()
+	# plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
+	# plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
+	#
+	# # 10 Genres with Best Games
+	# # 10 Genres with Worst Games
+	# average_score_of_genre = games.groupby('genre')['score'].mean().sort_values()
+	# plot_average_score_of_genre = figure(x_range=list(average_score_of_genre.nlargest(10).keys().values))
+	# plot_average_score_of_genre.vbar(x=list(average_score_of_genre.nlargest(10).keys().values), width=0.5, bottom=0,
+	# 								 top=average_score_of_genre.nlargest(10).get_values())
+	#
+	# plot_worst_genre = figure(x_range=list(average_score_of_genre.nsmallest(10).keys().values))
+	# plot_worst_genre.vbar(x=list(average_score_of_genre.nsmallest(10).keys().values), width=0.5, bottom=0,
+	# 								 top=average_score_of_genre.nsmallest(10).get_values())
+	#
+	# median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
+	# plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
+	# plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
 
 
 
 	output_file("ign.html")
 	grid = gridplot([
-		[plot_platform, plot_genre, plot_editors_choice],
-		[plot_average_score_of_platform],
-		[plot_median_score_of_platform],
-		[plot_average_score_of_genre, plot_worst_genre],
-		[plot_median_score_of_genre]
+		[plot_platform, plot_genre, plot_editors_choice]
+		# [plot_average_score_of_platform],
+		# [plot_median_score_of_platform],
+		# [plot_average_score_of_genre, plot_worst_genre],
+		# [plot_median_score_of_genre]
 	])
 	show(grid)
 
