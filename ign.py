@@ -10,6 +10,12 @@ def count_attribute(df, attribute):
 	return df.get(attribute).value_counts().sort_index()
 
 
+def top_10_and_other(series):
+	top_10 = series.nlargest(10)
+	other = series.nsmallest(series.shape[0] - 10).sum()
+	return top_10.append(pandas.Series([other], ['other']))
+
+
 ign = pandas.read_csv('ign.csv')
 
 
@@ -62,20 +68,17 @@ def basic():
 
 
 # --- 2010 - 2016 ---
-
 def games_2010_2016():
 	games = ign[(ign['release_year'] >= 2010) & (ign['release_year'] <= 2016)]
 	print(games.shape[0], 'games from 2010 to 2016')
 
 	# Platform
 	platform = count_attribute(games, 'platform')
-	platform = platform.nlargest(10)
-	plot_platform = Donut(platform, plot_height=600, plot_width=600)
+	plot_platform = Donut(top_10_and_other(platform), plot_height=600, plot_width=600)
 
 	# Genre
 	genre = count_attribute(games, 'genre')
-	genre = genre.nlargest(10)
-	plot_genre = Donut(genre, plot_height=600, plot_width=600)
+	plot_genre = Donut(top_10_and_other(genre), plot_height=600, plot_width=600)
 
 	editors_choice = count_attribute(games, 'editors_choice')
 	plot_editors_choice = Donut(editors_choice, plot_height=600, plot_width=600)
