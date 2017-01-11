@@ -36,7 +36,7 @@ index = ['Masterpiece', 'Amazing', 'Great', 'Good', 'Okay', 'Bad', 'Awful', 'Pai
 index.reverse()
 total_score_phrase = total_score_phrase.reindex(index)
 hover_total_score_phrase = hovertool()
-plot_total_score_phrase = figure(width=800, x_range=list(total_score_phrase.keys().values), tools=[hover_total_score_phrase], title='评价')
+plot_total_score_phrase = figure(x_range=list(total_score_phrase.keys().values), tools=[hover_total_score_phrase], title='评价')
 plot_total_score_phrase.vbar(x=list(total_score_phrase.keys().values), width=0.5, bottom=0, top=total_score_phrase.get_values())
 
 # score, distribution
