@@ -56,39 +56,53 @@ grid_total_score_and_phrase = gridplot([
 total_platform = count_attribute(ign, 'platform')
 total_num_platform = total_platform.shape[0]
 
-total_top_15_platform = top_n_and_other(15, total_platform)
-plot_total_top_15_platform = figure(width=1800, x_range=list(total_top_15_platform.keys().values), title='游戏最多的15个平台')
-plot_total_top_15_platform.vbar(x=list(total_top_15_platform.keys().values), width=0.5, bottom=0, top=total_top_15_platform.get_values())
+total_top_10_platform = top_n_and_other(10, total_platform)
+plot_total_top_10_platform = figure(width=800, x_range=list(total_top_10_platform.keys().values), title='游戏最多的10个平台')
+plot_total_top_10_platform.vbar(x=list(total_top_10_platform.keys().values), width=0.5, bottom=0, top=total_top_10_platform.get_values())
 
-total_bottom_15_platform = total_platform.nsmallest(15)
-plot_total_bottom_15_platform = figure(width=1800, x_range=list(total_bottom_15_platform.keys().values), title='游戏最少的15个平台')
-plot_total_bottom_15_platform.vbar(x=list(total_bottom_15_platform.keys().values), width=0.5, bottom=0, top=total_bottom_15_platform.get_values())
+total_bottom_10_platform = total_platform.nsmallest(10)
+plot_total_bottom_10_platform = figure(width=1000, x_range=list(total_bottom_10_platform.keys().values), title='游戏最少的10个平台')
+plot_total_bottom_10_platform.vbar(x=list(total_bottom_10_platform.keys().values), width=0.5, bottom=0, top=total_bottom_10_platform.get_values())
 
-# # genre
-# genre = count_attribute(ign, 'genre')
-# genre = genre.nlargest(20)
-# plot_genre = figure(width=1600, x_range=list(genre.keys().values))
-# plot_genre.vbar(x=list(genre.keys().values), width=0.5, bottom=0, top=genre.get_values(), color="#CAB2D6")
-#
-# # editors_choice
-# editors_choice = count_attribute(ign, 'editors_choice')
-# plot_editors_choice = figure(x_range=list(editors_choice.keys().values))
-# plot_editors_choice.vbar(x=list(editors_choice.keys().values), width=0.5, bottom=0, top=editors_choice.get_values())
-#
-# # release_year
-# release_year = count_attribute(ign, 'release_year')
-# plot_release_year = figure()
-# plot_release_year.vbar(x=list(release_year.keys().values), width=0.5, bottom=0, top=release_year.get_values())
-#
-# # release_month
-# release_month = count_attribute(ign, 'release_month')
-# plot_release_month = figure()
-# plot_release_month.vbar(x=list(release_month.keys().values), width=0.5, bottom=0, top=release_month.get_values())
-#
-# # release_day
-# release_day = count_attribute(ign, 'release_day')
-# plot_release_day = figure(width=1200)
-# plot_release_day.vbar(x=list(release_day.keys().values), width=0.5, bottom=0, top=release_day.get_values())
+grid_total_platform = gridplot([
+	[plot_total_top_10_platform, plot_total_bottom_10_platform]
+])
+
+# genre
+total_genre = count_attribute(ign, 'genre')
+total_num_genre = total_genre.shape[0]
+
+total_top_10_genre = top_n_and_other(10, total_genre)
+plot_total_top_10_genre = figure(width=800, x_range=list(total_top_10_genre.keys().values), title='游戏最多的10个类型')
+plot_total_top_10_genre.vbar(x=list(total_top_10_genre.keys().values), width=0.5, bottom=0, top=total_top_10_genre.get_values(), color="#CAB2D6")
+
+total_bottom_10_genre = total_genre.nsmallest(10)
+plot_total_bottom_10_genre = figure(width=1000, x_range=list(total_bottom_10_genre.keys().values), title='游戏最少的10个类型')
+plot_total_bottom_10_genre.vbar(x=list(total_bottom_10_genre.keys().values), width=0.5, bottom=0, top=total_bottom_10_genre.get_values(), color="#CAB2D6")
+
+grid_total_genre = gridplot([
+	[plot_total_top_10_genre, plot_total_bottom_10_genre]
+])
+
+
+# release_year
+total_release_year = count_attribute(ign, 'release_year')
+plot_total_release_year = figure(title="年份")
+plot_total_release_year.vbar(x=list(total_release_year.keys().values), width=0.5, bottom=0, top=total_release_year.get_values())
+
+# release_month
+total_release_month = count_attribute(ign, 'release_month')
+plot_total_release_month = figure(title="月份")
+plot_total_release_month.vbar(x=list(total_release_month.keys().values), width=0.5, bottom=0, top=total_release_month.get_values())
+
+# release_day
+total_release_day = count_attribute(ign, 'release_day')
+plot_total_release_day = figure(title="日子")
+plot_total_release_day.vbar(x=list(total_release_day.keys().values), width=0.5, bottom=0, top=total_release_day.get_values())
+
+grid_total_release_time = gridplot([
+	[plot_total_release_year, plot_total_release_month, plot_total_release_day]
+])
 # --- Basic End --------------------------------------------------------------------------------------------------------
 
 
@@ -138,22 +152,15 @@ plot_total_bottom_15_platform.vbar(x=list(total_bottom_15_platform.keys().values
 # median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
 # plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
 # plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
-#
-# # grid = gridplot([
-# # 	[plot_platform, plot_genre, plot_editors_choice],
-# # 	[plot_average_score_of_platform],
-# # 	[plot_median_score_of_platform],
-# # 	[plot_average_score_of_genre, plot_worst_genre],
-# # 	[plot_median_score_of_genre]
-# # ])
 
 
 # --- 2010 - 2016 End ---
 
 script, divs = components({
 	'grid_total_score_and_phrase': grid_total_score_and_phrase,
-	'total_top_15_platform': plot_total_top_15_platform,
-	'total_bottom_15_platform': plot_total_bottom_15_platform
+	'grid_total_platform': grid_total_platform,
+	'grid_total_genre': grid_total_genre,
+	'grid_total_release_time': grid_total_release_time
 	# 'plot_platform': plot_platform,
 	# 'plot_genre': plot_genre,
 	# 'plot_editors_choice': plot_editors_choice
@@ -161,6 +168,7 @@ script, divs = components({
 divs['script'] = script
 divs['total_num_games'] = total_num_games
 divs['total_num_platform'] = total_num_platform
+divs['total_num_genre'] = total_num_genre
 
 with open('template.jinja', 'r', encoding='utf8') as f:
 	template = Template(f.read())

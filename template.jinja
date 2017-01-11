@@ -19,17 +19,46 @@
                 border-top: solid lightgray 1px;
                 padding-top: 10px;
             }
+            .section-level-1 {
+                margin-bottom: 120px;
+            }
+            .section-level-2 {
+                margin-bottom: 80px;
+            }
+
+            p {
+                margin: 0;
+            }
         </style>
     </head>
     <body>
         <h1>20 Years of Gaming: A Complete Review</h1>
-        <h2 class="section-divide">总体情况</h2>
-        <p>从1996到2016年，一共有{{ total_num_games }}款游戏。</p>
-        {{ grid_total_score_and_phrase }}
-        <h3 class="section-divide">游戏平台</h3>
-        <p>{{ total_num_platform }}个不同的游戏平台</p>
-        {{ total_top_15_platform }}
-        {{ total_bottom_15_platform }}
+        <div class="section-level-1">
+            <h2 class="section-divide">总体情况</h2>
+
+            <div class="section-level-2">
+                <h3>游戏评分</h3>
+                <p>从1996到2016年，一共有{{ total_num_games }}款游戏。</p>
+                {{ grid_total_score_and_phrase }}
+            </div>
+
+            <div class="section-level-2">
+                <h3>游戏平台</h3>
+                <p>{{ total_num_platform }}个不同的游戏平台</p>
+                {{ grid_total_platform }}
+            </div>
+
+            <div class="section-level-2">
+                <h3>游戏类型</h3>
+                <p>{{ total_num_genre }}个不同的游戏类型</p>
+                {{ grid_total_genre }}
+            </div>
+
+            <div class="section-level-2">
+                <h3>发布时间</h3>
+                {{ grid_total_release_time }}
+            </div>
+        </div>
         <h2 class="section-divide">游戏平台趋势</h2>
         <h2 class="section-divide">游戏类型趋势</h2>
 {#        <p>5014 Games from 2010 to 2016</p>#}
