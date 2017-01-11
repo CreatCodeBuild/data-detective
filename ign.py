@@ -76,7 +76,7 @@ def hovertool():
 
 # --- 2010 - 2016 ---
 def games_2010_2016():
-	games = ign[(ign['release_year'] >= 2010) & (ign['release_year'] <= 2016)]
+	games = ign[(ign['release_year'] >= 2015) & (ign['release_year'] <= 2016)]
 	print(games.shape[0], 'games from 2010 to 2016')
 
 	hover1 = hovertool()
@@ -85,13 +85,13 @@ def games_2010_2016():
 	# Platform
 	platform = count_attribute(games, 'platform')
 	top10 = top_10_and_other(platform)
-	plot_platform = figure(width=1600, x_range=list(top10.keys().values), tools=[hover1])
+	plot_platform = figure(width=1600, x_range=list(top10.keys().values), tools=[hover1], title='TOP 10 游戏平台')
 	plot_platform.vbar(x=list(top10.keys().values), width=0.5, bottom=0, top=top10.get_values())
 
 	# Genre
 	genre = count_attribute(games, 'genre')
 	top10_genre = top_10_and_other(genre)
-	plot_genre = figure(width=1600, x_range=list(top10_genre.keys().values), tools=[hover2])
+	plot_genre = figure(width=1600, x_range=list(top10_genre.keys().values), tools=[hover2], title='TOP 10 游戏类型')
 	plot_genre.vbar(x=list(top10_genre.keys().values), width=0.5, bottom=0, top=top10_genre.get_values())
 
 	editors_choice = count_attribute(games, 'editors_choice')
@@ -138,7 +138,7 @@ def games_2010_2016():
 	})
 	divs['script'] = sciprt
 
-	with open('template.jinja', 'r') as f:
+	with open('template.jinja', 'r', encoding='utf8') as f:
 		template = Template(f.read())
 		# html = file_html([plot_platform, plot_genre, plot_editors_choice], CDN, template=template, template_variables )
 		html = template.render(divs)

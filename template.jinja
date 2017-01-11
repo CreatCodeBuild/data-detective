@@ -12,15 +12,24 @@
             .bk-plot-layout {
                 display: inline-block;
             }
-
+            .section-divide {
+                border-top: solid lightgray 1px;
+                padding-top: 10px;
+            }
         </style>
     </head>
     <body>
         <h1>20 Years of Gaming: A Complete Review</h1>
 
-        <h3 style="border-top: solid lightgray 1px; padding-top: 10px">2010 - 2016</h3>
+        <h2 class="section-divide">总体情况</h2>
+        <h2 class="section-divide">游戏平台趋势</h2>
+        <h2 class="section-divide">游戏类型趋势</h2>
         <p>5014 Games from 2010 to 2016</p>
         {{ plot_platform }}
+        <p>
+            我们可以看到，PC仍然是最具活力的游戏平台。PS与XBox平分秋色，但是略胜一筹。<br>
+            iPhone不出意外地是最流行的游戏平台之一。Android并不是2010年以来最流行的游戏平台。
+        </p>
 
         {{ plot_genre }}
         {{ plot_editors_choice }}
