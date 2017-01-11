@@ -71,29 +71,27 @@ def basic():
 	plot_release_day.vbar(x=list(release_day.keys().values), width=0.5, bottom=0, top=release_day.get_values())
 	# --- Basic End --------------------------------------------------------------------------------------------------------
 
+def hovertool():
+	return HoverTool(tooltips=[("index", "$index"),("value", "@top"),])
 
 # --- 2010 - 2016 ---
 def games_2010_2016():
 	games = ign[(ign['release_year'] >= 2010) & (ign['release_year'] <= 2016)]
 	print(games.shape[0], 'games from 2010 to 2016')
 
-	hover = HoverTool(
-		tooltips=[
-			("index", "$index"),
-			("value", "@top"),
-		]
-	)
+	hover1 = hovertool()
+	hover2 = hovertool()
 
 	# Platform
 	platform = count_attribute(games, 'platform')
 	top10 = top_10_and_other(platform)
-	plot_platform = figure(width=1600, x_range=list(top10.keys().values), tools=[hover])
+	plot_platform = figure(width=1600, x_range=list(top10.keys().values), tools=[hover1])
 	plot_platform.vbar(x=list(top10.keys().values), width=0.5, bottom=0, top=top10.get_values())
 
 	# Genre
 	genre = count_attribute(games, 'genre')
 	top10_genre = top_10_and_other(genre)
-	plot_genre = figure(width=1600, x_range=list(top10_genre.keys().values), tools=[hover])
+	plot_genre = figure(width=1600, x_range=list(top10_genre.keys().values), tools=[hover2])
 	plot_genre.vbar(x=list(top10_genre.keys().values), width=0.5, bottom=0, top=top10_genre.get_values())
 
 	editors_choice = count_attribute(games, 'editors_choice')
@@ -139,8 +137,6 @@ def games_2010_2016():
 		'plot_editors_choice': plot_editors_choice
 	})
 	divs['script'] = sciprt
-	divs['platform_stats'] = str(top10)
-
 
 	with open('template.jinja', 'r') as f:
 		template = Template(f.read())
