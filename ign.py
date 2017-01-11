@@ -173,6 +173,6 @@ divs['total_num_genre'] = total_num_genre
 with open('template.jinja', 'r', encoding='utf8') as f:
 	template = Template(f.read())
 	html = template.render(divs)
-	with open('out.html', mode='w', encoding='utf-8') as f:
+	with open('ign.html', mode='w', encoding='utf-8') as f:
 		f.write(html)
 
