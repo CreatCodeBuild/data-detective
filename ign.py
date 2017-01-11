@@ -5,7 +5,9 @@ from bokeh.layouts import gridplot
 from bokeh.charts import Donut
 from bokeh.models import HoverTool
 from bokeh.resources import CDN
-from bokeh.embed import file_html
+from bokeh.embed import file_html, components
+from jinja2 import Template
+
 
 
 def count_attribute(df, attribute):
@@ -15,7 +17,7 @@ def count_attribute(df, attribute):
 def top_10_and_other(series):
 	top_10 = series.nlargest(10)
 	other = series.nsmallest(series.shape[0] - 10).sum()
-	return top_10.append(pandas.Series([other], ['other']))
+	return top_10.append(pandas.Series([other], ['Other']))
 
 
 ign = pandas.read_csv('ign.csv')
@@ -95,81 +97,54 @@ def games_2010_2016():
 	editors_choice = count_attribute(games, 'editors_choice')
 	plot_editors_choice = Donut(editors_choice, title='Editors Choice', plot_height=600, plot_width=600)
 
-	# # Best Platform by average scores of games
-	# average_score_of_platform = games.groupby('platform')['score'].mean().sort_values()
-	# plot_average_score_of_platform = figure(width=1600, x_range=list(average_score_of_platform.keys().values))
-	# plot_average_score_of_platform.vbar(x=list(average_score_of_platform.keys().values), width=0.5, bottom=0, top=average_score_of_platform.get_values())
-	#
-	# median_score_of_platform = games.groupby('platform')['score'].median().sort_values()
-	# plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
-	# plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
-	#
-	# # 10 Genres with Best Games
-	# # 10 Genres with Worst Games
-	# average_score_of_genre = games.groupby('genre')['score'].mean().sort_values()
-	# plot_average_score_of_genre = figure(x_range=list(average_score_of_genre.nlargest(10).keys().values))
-	# plot_average_score_of_genre.vbar(x=list(average_score_of_genre.nlargest(10).keys().values), width=0.5, bottom=0,
-	# 								 top=average_score_of_genre.nlargest(10).get_values())
-	#
-	# plot_worst_genre = figure(x_range=list(average_score_of_genre.nsmallest(10).keys().values))
-	# plot_worst_genre.vbar(x=list(average_score_of_genre.nsmallest(10).keys().values), width=0.5, bottom=0,
-	# 								 top=average_score_of_genre.nsmallest(10).get_values())
-	#
-	# median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
-	# plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
-	# plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
+	# Best Platform by average scores of games
+	average_score_of_platform = games.groupby('platform')['score'].mean().sort_values()
+	plot_average_score_of_platform = figure(width=1600, x_range=list(average_score_of_platform.keys().values))
+	plot_average_score_of_platform.vbar(x=list(average_score_of_platform.keys().values), width=0.5, bottom=0, top=average_score_of_platform.get_values())
 
-	grid = gridplot([
-		[plot_platform, plot_genre, plot_editors_choice]
-		# [plot_average_score_of_platform],
-		# [plot_median_score_of_platform],
-		# [plot_average_score_of_genre, plot_worst_genre],
-		# [plot_median_score_of_genre]
-	])
+	median_score_of_platform = games.groupby('platform')['score'].median().sort_values()
+	plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
+	plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
 
-	show(grid)
+	# 10 Genres with Best Games
+	# 10 Genres with Worst Games
+	average_score_of_genre = games.groupby('genre')['score'].mean().sort_values()
+	plot_average_score_of_genre = figure(x_range=list(average_score_of_genre.nlargest(10).keys().values))
+	plot_average_score_of_genre.vbar(x=list(average_score_of_genre.nlargest(10).keys().values), width=0.5, bottom=0,
+									 top=average_score_of_genre.nlargest(10).get_values())
 
-	html = file_html(grid, CDN, "Out")
-	with open('out.html', mode='w') as f:
-		f.write(html)
+	plot_worst_genre = figure(x_range=list(average_score_of_genre.nsmallest(10).keys().values))
+	plot_worst_genre.vbar(x=list(average_score_of_genre.nsmallest(10).keys().values), width=0.5, bottom=0,
+									 top=average_score_of_genre.nsmallest(10).get_values())
 
+	median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
+	plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
+	plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
 
+	# grid = gridplot([
+	# 	[plot_platform, plot_genre, plot_editors_choice],
+	# 	[plot_average_score_of_platform],
+	# 	[plot_median_score_of_platform],
+	# 	[plot_average_score_of_genre, plot_worst_genre],
+	# 	[plot_median_score_of_genre]
+	# ])
 
-	# Worst Platform by average scores of games
+	# show(grid)
 
+	sciprt, divs = components({
+		'plot_platform': plot_platform,
+		'plot_genre': plot_genre,
+		'plot_editors_choice': plot_editors_choice
+	})
+	divs['script'] = sciprt
 
-'''
-Top 100 Games by Score
- - Platform
- - Genre
- - editors_choice
- '''
-# top100 = ign.nlargest(1, 'score', keep='first')
-# print(top100, top100.shape)
+	with open('template.jinja', 'r') as f:
+		template = Template(f.read())
+		# html = file_html([plot_platform, plot_genre, plot_editors_choice], CDN, template=template, template_variables )
+		html = template.render(divs)
+		with open('out.html', mode='w', encoding='utf-8') as f:
+			f.write(html)
 
-'''
-Top 20 Games by Score
-
-Top 10 Games by Score
-
-Percentage of good+ games of platforms
-Percentage of bad+ games of platforms
-
-
-Summary
-'''
 
 games_2010_2016()
 # --- 2010 - 2016 End ---
-
-
-# output to static HTML file
-# output_file("ign.html")
-# grid = gridplot([
-# 	[plot_score, None],
-# 	[plot_platform, plot_score_phrase],
-# 	[plot_genre],
-# 	[plot_editors_choice, plot_release_year],
-# 	[plot_release_day, plot_release_month]
-# ])
-# show(grid)
