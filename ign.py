@@ -10,15 +10,21 @@ from bokeh.embed import file_html, components
 from jinja2 import Template
 
 
-
 def count_attribute(df, attribute):
 	return df.get(attribute).value_counts().sort_index()
 
 
-def top_10_and_other(series):
-	top_10 = series.nlargest(10)
-	other = series.nsmallest(series.shape[0] - 10).sum()
-	return top_10.append(pandas.Series([other], ['Other']))
+def top_n_and_other(n, series):
+	top_n = series.nlargest(n)
+	other = series.nsmallest(series.shape[0] - n).sum()
+	return top_n.append(pandas.Series([other], ['Other']))
+
+
+def bottom_n_and_other(n, series):
+	bottom_n = series.nsmallest(n)
+	other = series.nlargest(series.shape[0] - n).sum()
+	return bottom_n.append(pandas.Series([other], ['Other']))
+
 
 def hovertool():
 	return HoverTool(tooltips=[("index", "$index"), ("value", "@top")])
@@ -46,13 +52,17 @@ grid_total_score_and_phrase = gridplot([
 	[plot_total_score_phrase, plot_total_score]
 ])
 
-# # platform
-# platform = count_attribute(ign, 'platform')
-# platform = platform.nlargest(10)
-# plot_platform = figure(width=800, x_range=list(platform.keys().values))
-# plot_platform.vbar(x=list(platform.keys().values), width=0.5, bottom=0, top=platform.get_values(), color="#CAB2D6")
+# platform
+total_platform = count_attribute(ign, 'platform')
+total_num_platform = total_platform.shape[0]
 
+total_top_15_platform = top_n_and_other(15, total_platform)
+plot_total_top_15_platform = figure(width=1800, x_range=list(total_top_15_platform.keys().values), title='游戏最多的15个平台')
+plot_total_top_15_platform.vbar(x=list(total_top_15_platform.keys().values), width=0.5, bottom=0, top=total_top_15_platform.get_values())
 
+total_bottom_15_platform = total_platform.nsmallest(15)
+plot_total_bottom_15_platform = figure(width=1800, x_range=list(total_bottom_15_platform.keys().values), title='游戏最少的15个平台')
+plot_total_bottom_15_platform.vbar(x=list(total_bottom_15_platform.keys().values), width=0.5, bottom=0, top=total_bottom_15_platform.get_values())
 
 # # genre
 # genre = count_attribute(ign, 'genre')
@@ -141,13 +151,16 @@ grid_total_score_and_phrase = gridplot([
 # --- 2010 - 2016 End ---
 
 script, divs = components({
-	'grid_total_score_and_phrase': grid_total_score_and_phrase
+	'grid_total_score_and_phrase': grid_total_score_and_phrase,
+	'total_top_15_platform': plot_total_top_15_platform,
+	'total_bottom_15_platform': plot_total_bottom_15_platform
 	# 'plot_platform': plot_platform,
 	# 'plot_genre': plot_genre,
 	# 'plot_editors_choice': plot_editors_choice
 })
 divs['script'] = script
 divs['total_num_games'] = total_num_games
+divs['total_num_platform'] = total_num_platform
 
 with open('template.jinja', 'r', encoding='utf8') as f:
 	template = Template(f.read())
