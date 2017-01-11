@@ -5,6 +5,7 @@ from bokeh.layouts import gridplot
 from bokeh.charts import Donut
 from bokeh.models import HoverTool
 from bokeh.resources import CDN
+from bokeh.models.sources import ColumnDataSource
 from bokeh.embed import file_html, components
 from jinja2 import Template
 
@@ -79,20 +80,21 @@ def games_2010_2016():
 	hover = HoverTool(
 		tooltips=[
 			("index", "$index"),
-			("(x,y)", "($x, $y)"),
+			("value", "@top"),
 		]
 	)
 
 	# Platform
 	platform = count_attribute(games, 'platform')
 	top10 = top_10_and_other(platform)
-	print(top10)
-	plot_platform = Donut(top10, title='Platform', plot_height=600, plot_width=600,
-						  tools=[hover])
+	plot_platform = figure(width=1600, x_range=list(top10.keys().values), tools=[hover])
+	plot_platform.vbar(x=list(top10.keys().values), width=0.5, bottom=0, top=top10.get_values())
 
 	# Genre
 	genre = count_attribute(games, 'genre')
-	plot_genre = Donut(top_10_and_other(genre), title='Genre', plot_height=600, plot_width=600)
+	top10_genre = top_10_and_other(genre)
+	plot_genre = figure(width=1600, x_range=list(top10_genre.keys().values), tools=[hover])
+	plot_genre.vbar(x=list(top10_genre.keys().values), width=0.5, bottom=0, top=top10_genre.get_values())
 
 	editors_choice = count_attribute(games, 'editors_choice')
 	plot_editors_choice = Donut(editors_choice, title='Editors Choice', plot_height=600, plot_width=600)
@@ -137,6 +139,8 @@ def games_2010_2016():
 		'plot_editors_choice': plot_editors_choice
 	})
 	divs['script'] = sciprt
+	divs['platform_stats'] = str(top10)
+
 
 	with open('template.jinja', 'r') as f:
 		template = Template(f.read())
