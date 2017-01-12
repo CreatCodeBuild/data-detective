@@ -31,7 +31,7 @@ def binary_relation_count(df, key1, key2):
 
 
 def hovertool():
-	return HoverTool(tooltips=[("index", "$index"), ("value", "@top")])
+	return HoverTool(tooltips=[("value", "@top")])
 
 
 ign = pandas.read_csv('ign.csv')
@@ -47,7 +47,7 @@ index = ['Masterpiece', 'Amazing', 'Great', 'Good', 'Okay', 'Bad', 'Awful', 'Pai
 index.reverse()
 total_score_phrase = total_score_phrase.reindex(index)
 hover_total_score_phrase = hovertool()
-plot_total_score_phrase = figure(x_range=list(total_score_phrase.keys().values), tools=[hover_total_score_phrase], title='评价')
+plot_total_score_phrase = figure(x_range=list(total_score_phrase.keys().values), tools=[hover_total_score_phrase, 'save'], title='评价')
 plot_total_score_phrase.vbar(x=list(total_score_phrase.keys().values), width=0.5, bottom=0, top=total_score_phrase.get_values())
 
 # score, distribution
@@ -62,7 +62,8 @@ total_platform = count_attribute(ign, 'platform')
 total_num_platform = total_platform.shape[0]
 
 total_top_10_platform = top_n_and_other(10, total_platform)
-plot_total_top_10_platform = figure(width=800, x_range=list(total_top_10_platform.keys().values), title='游戏最多的10个平台')
+hover_1 = hovertool()
+plot_total_top_10_platform = figure(width=800, x_range=list(total_top_10_platform.keys().values), tools=[hover_1, 'save'], title='游戏最多的10个平台')
 plot_total_top_10_platform.vbar(x=list(total_top_10_platform.keys().values), width=0.5, bottom=0, top=total_top_10_platform.get_values())
 
 total_bottom_10_platform = total_platform.nsmallest(10)
@@ -78,7 +79,8 @@ total_genre = count_attribute(ign, 'genre')
 total_num_genre = total_genre.shape[0]
 
 total_top_10_genre = top_n_and_other(10, total_genre)
-plot_total_top_10_genre = figure(width=800, x_range=list(total_top_10_genre.keys().values), title='游戏最多的10个类型')
+hover_2 = hovertool()
+plot_total_top_10_genre = figure(width=800, x_range=list(total_top_10_genre.keys().values), tools=[hover_2, 'save'], title='游戏最多的10个类型')
 plot_total_top_10_genre.vbar(x=list(total_top_10_genre.keys().values), width=0.5, bottom=0, top=total_top_10_genre.get_values(), color="#CAB2D6")
 
 total_bottom_10_genre = total_genre.nsmallest(10)
@@ -112,68 +114,29 @@ grid_total_release_time = gridplot([
 
 # platform_year = binary_relation_count( 'release_year', 'platform')
 # print(platform_year.shape, platform_year['iPod'])
-hover4 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Value", "@count")])
-platform_trend = HeatMap(ign, width=1800, height=800, x='platform', y='release_year',
-						 tools=[hover4], hover_text='stat',
-						 title='Platform Trend')
-genre_trend = HeatMap(ign, width=1800, height=800, x='genre', y='release_year', title='Genre Trend')
+hover4 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Count", "@values")])
+hover5 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Score", "@values")])
+platform_trend_count = HeatMap(ign, width=1800, height=800, x='platform', y='release_year',
+						 	   tools=[hover4, 'save'], legend='bottom_right', title='Platform Trend: Number of Games')
+platform_trend_mean = HeatMap(ign, width=1800, height=800, x='platform', y='release_year', values='score', stat='mean',
+						      tools=[hover5, 'save'], legend='bottom_right', title='Platform Trend: Average Score')
 
-# --- 2010 - 2016 ---
-# games = ign[(ign['release_year'] >= 2015) & (ign['release_year'] <= 2016)]
-# print(games.shape[0], 'games from 2010 to 2016')
-#
-#
-# hover2 = hovertool()
-#
-# # Platform
-# platform = count_attribute(games, 'platform')
-# top10 = top_10_and_other(platform)
-# plot_platform = figure(width=900, x_range=list(top10.keys().values), tools=[hover1], title='TOP 10 游戏平台')
-# plot_platform.vbar(x=list(top10.keys().values), width=0.5, bottom=0, top=top10.get_values())
-#
-# # Genre
-# genre = count_attribute(games, 'genre')
-# top10_genre = top_10_and_other(genre)
-# plot_genre = figure(width=900, x_range=list(top10_genre.keys().values), tools=[hover2], title='TOP 10 游戏类型')
-# plot_genre.vbar(x=list(top10_genre.keys().values), width=0.5, bottom=0, top=top10_genre.get_values())
-#
-# editors_choice = count_attribute(games, 'editors_choice')
-# plot_editors_choice = Donut(editors_choice, title='Editors Choice', plot_height=600, plot_width=600)
-#
-# # Best Platform by average scores of games
-# average_score_of_platform = games.groupby('platform')['score'].mean().sort_values()
-# plot_average_score_of_platform = figure(width=1600, x_range=list(average_score_of_platform.keys().values))
-# plot_average_score_of_platform.vbar(x=list(average_score_of_platform.keys().values), width=0.5, bottom=0, top=average_score_of_platform.get_values())
-#
-# median_score_of_platform = games.groupby('platform')['score'].median().sort_values()
-# plot_median_score_of_platform = figure(width=1600, x_range=list(median_score_of_platform.keys().values))
-# plot_median_score_of_platform.vbar(x=list(median_score_of_platform.keys().values), width=0.5, bottom=0,  top=median_score_of_platform.get_values())
-#
-# # 10 Genres with Best Games
-# # 10 Genres with Worst Games
-# average_score_of_genre = games.groupby('genre')['score'].mean().sort_values()
-# plot_average_score_of_genre = figure(x_range=list(average_score_of_genre.nlargest(10).keys().values))
-# plot_average_score_of_genre.vbar(x=list(average_score_of_genre.nlargest(10).keys().values), width=0.5, bottom=0,
-# 								 top=average_score_of_genre.nlargest(10).get_values())
-#
-# plot_worst_genre = figure(x_range=list(average_score_of_genre.nsmallest(10).keys().values))
-# plot_worst_genre.vbar(x=list(average_score_of_genre.nsmallest(10).keys().values), width=0.5, bottom=0,
-# 								 top=average_score_of_genre.nsmallest(10).get_values())
-#
-# median_score_of_genre = games.groupby('genre')['score'].median().sort_values()
-# plot_median_score_of_genre = figure(width=1600, x_range=list(median_score_of_genre.keys().values))
-# plot_median_score_of_genre.vbar(x=list(median_score_of_genre.keys().values), width=0.5, bottom=0,  top=median_score_of_genre.get_values())
-
-
-# --- 2010 - 2016 End ---
+hover6 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Count", "@values")])
+hover7 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Score", "@values")])
+genre_trend_count = HeatMap(ign, width=1800, height=800, x='genre', y='release_year',
+							tools=[hover6, 'save'], legend='bottom_right', title='Genre Trend: Number of Games')
+genre_trend_mean = HeatMap(ign, width=1800, height=800, x='genre', y='release_year', values='score', stat='mean',
+						   tools=[hover7, 'save'], legend='bottom_right',title='Genre Trend: Average Score')
 
 script, divs = components({
 	'grid_total_score_and_phrase': grid_total_score_and_phrase,
 	'grid_total_platform': grid_total_platform,
 	'grid_total_genre': grid_total_genre,
 	'grid_total_release_time': grid_total_release_time,
-	'platform_trend': platform_trend,
-	'genre_trend': genre_trend
+	'platform_trend_count': platform_trend_count,
+	'platform_trend_mean': platform_trend_mean,
+	'genre_trend_count': genre_trend_count,
+	'genre_trend_mean': genre_trend_mean,
 })
 divs['script'] = script
 divs['total_num_games'] = total_num_games
