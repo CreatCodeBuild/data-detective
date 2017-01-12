@@ -110,7 +110,7 @@ print(type(platform_per_year), platform_per_year.keys())
 new = platform_per_year.reset_index()
 print(type(new), new.shape)
 print(new)
-new.set_index('release_year', inplace=True)
+new = new.pivot(index='release_year', columns='platform')
 print(type(new), new.shape)
 print(new)
 # --- 2010 - 2016 ---
