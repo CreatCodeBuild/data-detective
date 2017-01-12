@@ -26,6 +26,10 @@ def bottom_n_and_other(n, series):
 	return bottom_n.append(pandas.Series([other], ['Other']))
 
 
+def binary_relation_count(df, key1, key2):
+	return df.groupby([key1, key2]).size().reset_index().pivot(index=key1, columns=key2)
+
+
 def hovertool():
 	return HoverTool(tooltips=[("index", "$index"), ("value", "@top")])
 
@@ -105,14 +109,9 @@ ign = pandas.read_csv('ign.csv')
 # ])
 # --- Basic End --------------------------------------------------------------------------------------------------------
 
-platform_per_year = ign.groupby(['release_year', 'platform']).size()
-print(type(platform_per_year), platform_per_year.keys())
-new = platform_per_year.reset_index()
-print(type(new), new.shape)
-print(new)
-new = new.pivot(index='release_year', columns='platform')
-print(type(new), new.shape)
-print(new)
+platform_year = binary_relation_count(ign, 'release_year', 'platform')
+print(platform_year.shape)
+
 # --- 2010 - 2016 ---
 # games = ign[(ign['release_year'] >= 2015) & (ign['release_year'] <= 2016)]
 # print(games.shape[0], 'games from 2010 to 2016')
