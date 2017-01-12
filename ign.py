@@ -74,7 +74,6 @@ grid_total_platform = gridplot([
 
 # genre
 total_genre = count_attribute(ign, 'genre')
-print(total_genre.keys().tolist())
 total_num_genre = total_genre.shape[0]
 
 total_top_10_genre = top_n_and_other(10, total_genre)
@@ -112,10 +111,10 @@ grid_total_release_time = gridplot([
 
 # platform_year = binary_relation_count( 'release_year', 'platform')
 # print(platform_year.shape, platform_year['iPod'])
-platform_trend = HeatMap(ign, width=1800, height=800,
-						 x='platform', y='release_year',
-						 values='score', stat='max', title='Platform Trend')
-
+hover4 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Value", "@count")])
+platform_trend = HeatMap(ign, width=1800, height=800, x='platform', y='release_year',
+						 tools=[hover4], hover_text='stat',
+						 title='Platform Trend')
 # genre_trend = HeatMap(ign, width=1800, height=800, x='genre', y='release_year', title='Genre Trend')
 
 # --- 2010 - 2016 ---
