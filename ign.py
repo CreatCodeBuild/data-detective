@@ -35,6 +35,7 @@ def hovertool():
 
 
 ign = pandas.read_csv('ign.csv')
+ign['genre'].fillna('Not Specified', inplace=True)
 
 
 # --- Basic ------------------------------------------------------------------------------------------------------------
@@ -115,7 +116,7 @@ hover4 = HoverTool(tooltips=[("Platform", "@x"), ("Year", "@y"), ("Value", "@cou
 platform_trend = HeatMap(ign, width=1800, height=800, x='platform', y='release_year',
 						 tools=[hover4], hover_text='stat',
 						 title='Platform Trend')
-# genre_trend = HeatMap(ign, width=1800, height=800, x='genre', y='release_year', title='Genre Trend')
+genre_trend = HeatMap(ign, width=1800, height=800, x='genre', y='release_year', title='Genre Trend')
 
 # --- 2010 - 2016 ---
 # games = ign[(ign['release_year'] >= 2015) & (ign['release_year'] <= 2016)]
@@ -172,7 +173,7 @@ script, divs = components({
 	'grid_total_genre': grid_total_genre,
 	'grid_total_release_time': grid_total_release_time,
 	'platform_trend': platform_trend,
-	# 'genre_trend': genre_trend
+	'genre_trend': genre_trend
 })
 divs['script'] = script
 divs['total_num_games'] = total_num_games
