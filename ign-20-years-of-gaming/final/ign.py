@@ -34,7 +34,7 @@ def hovertool():
 	return HoverTool(tooltips=[("value", "@top")])
 
 
-ign = pandas.read_csv('ign.csv')
+ign = pandas.read_csv('../ign.csv')
 ign['genre'].fillna('Not Specified', inplace=True)
 
 
