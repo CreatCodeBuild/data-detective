@@ -30,9 +30,11 @@
                 margin: 0;
             }
         </style>
+        {{ script }}
     </head>
     <body>
         <h1>20 Years of Gaming: A Complete Review</h1>
+        <p>A Data Visualization work by <a href="https://creatcodebuild.github.io/">Albert X. Wang</a></p>
         <div class="section-level-1">
             <h2 class="section-divide">总体情况</h2>
 
@@ -69,15 +71,5 @@
             {{ genre_trend_count }}
             {{ genre_trend_mean }}
         </div>
-{#        <p>5014 Games from 2010 to 2016</p>#}
-{#        {{ plot_platform }}#}
-{#        <p>#}
-{#            我们可以看到，PC仍然是最具活力的游戏平台。PS与XBox平分秋色，但是略胜一筹。<br>#}
-{#            iPhone不出意外地是最流行的游戏平台之一。Android并不是2010年以来最流行的游戏平台。#}
-{#        </p>#}
-{##}
-{#        {{ plot_genre }}#}
-{#        {{ plot_editors_choice }}#}
-        {{ script }}
     </body>
 </html>
