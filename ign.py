@@ -106,8 +106,13 @@ ign = pandas.read_csv('ign.csv')
 # --- Basic End --------------------------------------------------------------------------------------------------------
 
 platform_per_year = ign.groupby(['release_year', 'platform']).size()
-print(platform_per_year)
-
+print(type(platform_per_year), platform_per_year.keys())
+new = platform_per_year.reset_index()
+print(type(new), new.shape)
+print(new)
+new.set_index('release_year', inplace=True)
+print(type(new), new.shape)
+print(new)
 # --- 2010 - 2016 ---
 # games = ign[(ign['release_year'] >= 2015) & (ign['release_year'] <= 2016)]
 # print(games.shape[0], 'games from 2010 to 2016')
