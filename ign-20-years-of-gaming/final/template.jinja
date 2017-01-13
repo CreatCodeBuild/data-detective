@@ -5,6 +5,26 @@
         <title>IGN 20 Years of Gaming</title>
         <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css" type="text/css" />
         <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js"></script>
+        <scirpt type="text/javascript" src="dom-i18n.min.js"></scirpt>
+        <script>
+            var currentLanguage = 'en';
+            console.log(window.domI18n);
+            var language = window.domI18n({
+              selector: '[data-translatable]',
+              separator: ' // ',
+              languages: ['en', 'zh'],
+              defaultLanguage: 'en'
+            });
+            function onLanguageChange() {
+                if(currentLanguage === 'en') {
+                    language.changeLanguage('zh');
+                    currentLanguage = 'zh';
+                } else {
+                    language.changeLanguage('en');
+                    currentLanguage = 'en';
+                }
+            }
+        </script>
         <style>
             body {
                 text-align: center;
@@ -36,40 +56,50 @@
         <h1>20 Years of Gaming: A Complete Review</h1>
         <p>A Data Visualization work by <a href="https://creatcodebuild.github.io/">Albert X. Wang</a></p>
         <div class="section-level-1">
-            <h2 class="section-divide">总体情况</h2>
+            <h2 class="section-divide" data-translatable>总体情况 // General Condition</h2>
 
             <div class="section-level-2">
-                <h3>游戏评分</h3>
-                <p>从1996到2016年，一共有{{ total_num_games }}款游戏。</p>
+                <h3 data-translatable>游戏评分 // Game Score</h3>
+                <p data-translatable>
+                    从1996到2016年，一共有{{ total_num_games }}款游戏。 //
+                    From 1996 to 2016, there are {{ total_num_games }} games.
+                </p>
                 {{ grid_total_score_and_phrase }}
             </div>
 
             <div class="section-level-2">
-                <h3>游戏平台</h3>
-                <p>{{ total_num_platform }}个不同的游戏平台</p>
+                <h3 data-translatable>游戏平台 // Game Platform</h3>
+                <p data-translatable>
+                    {{ total_num_platform }}个不同的游戏平台 //
+                    {{ total_num_platform }} different platforms
+                </p>
                 {{ grid_total_platform }}
             </div>
 
             <div class="section-level-2">
-                <h3>游戏类型</h3>
-                <p>{{ total_num_genre }}个不同的游戏类型</p>
+                <h3 data-translatable>游戏类型 // Game Genre</h3>
+                <p data-translatable>
+                    {{ total_num_genre }}个不同的游戏类型
+                    {{ total_num_genre }} different genres
+                </p>
                 {{ grid_total_genre }}
             </div>
 
             <div class="section-level-2">
-                <h3>发布时间</h3>
+                <h3 data-translatable>发布时间 // Release Time</h3>
                 {{ grid_total_release_time }}
             </div>
         </div>
         <div class="section-level-1">
-            <h2 class="section-divide">游戏平台趋势</h2>
+            <h2 class="section-divide" data-translatable>游戏平台趋势 // Game Platform Trend</h2>
             {{ platform_trend_count }}
             {{ platform_trend_mean }}
         </div>
         <div class="section-level-1">
-            <h2 class="section-divide">游戏类型趋势</h2>
+            <h2 class="section-divide" data-translatable>游戏类型趋势 // Game Genre Trend</h2>
             {{ genre_trend_count }}
             {{ genre_trend_mean }}
         </div>
+        <button onclick="onLanguageChange()">Change Language</button>
     </body>
 </html>
