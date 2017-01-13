@@ -1,5 +1,5 @@
 # data-detective
-数据可视化 Data Visualization Works
+数据可视化 Data Visualization Works  
 This is a data visualization tutorial collection. I will post a series of tutorials to show you how to visualize data step by step.
 ## IGN游戏20年 IGN: 20 Years of Gaming  
 ### Bilibili
